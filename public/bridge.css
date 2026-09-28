@@ -1,0 +1,10 @@
+studio-text{display:inline}
+[data-studio-field]{cursor:text;outline:1px solid transparent;outline-offset:3px;border-radius:2px;transition:outline-color .12s}
+[data-studio-field]:hover{outline:1px dashed #668f68;background:#e2eedb44}
+[data-studio-field].studio-selected{outline:2px solid #608b60;background:#e2eedb44}
+[data-studio-field][contenteditable="true"]{outline:2px solid #608b60;white-space:pre-wrap;min-width:.5em;caret-color:#285a48}
+[data-studio-field]:empty::after{content:'テキストを入力';opacity:.4;font-size:12px}
+body.studio-preview [data-studio-field]{cursor:default;outline:none!important;background:transparent!important}
+body.studio-preview [data-studio-field]:empty::after{content:''}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
