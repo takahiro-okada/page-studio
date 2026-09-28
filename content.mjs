@@ -18,16 +18,16 @@ const walk = (node, visitor, path = '0') => {
 function sectionName(node) {
   let parent = node.parentNode;
   while (parent) {
-    if (parent.tagName === 'header') return '共通 · ヘッダー';
-    if (parent.tagName === 'footer' && parent.parentNode?.tagName === 'body') return '共通 · フッター';
+    if (parent.tagName === 'header') return 'Shared · Header';
+    if (parent.tagName === 'footer' && parent.parentNode?.tagName === 'body') return 'Shared · Footer';
     if (parent.tagName === 'section') {
       let heading;
       walk(parent, child => { if (!heading && /^h[12]$/.test(child.tagName)) heading = textOf(child).trim(); });
-      return heading || 'ページ本文';
+      return heading || 'Page content';
     }
     parent = parent.parentNode;
   }
-  return 'ページ設定';
+  return 'Page settings';
 }
 function regionOf(node) {
   let parent = node;
@@ -60,12 +60,12 @@ export function inspectPage(html, page) {
       bindings.push({ node, attribute, field: {
         id, original, type, scope: region ? 'shared' : 'page',
         label: label || original.trim().replace(/\s+/g, ' ').slice(0, 72),
-        section: inHead ? '検索・ページ設定' : sectionName(node),
+        section: inHead ? 'Search and page settings' : sectionName(node),
         pageId: page.id
       } });
     };
     if (node.nodeName === '#text' && (!inHead || node.parentNode?.tagName === 'title')) {
-      add(node.value, inHead ? 'metadata' : 'text', null, inHead ? 'ブラウザ・検索結果のタイトル' : undefined);
+      add(node.value, inHead ? 'metadata' : 'text', null, inHead ? 'Browser and search result title' : undefined);
     }
     if (node.tagName === 'meta' && ['description', 'og:title', 'og:description'].includes(attr(node, 'name') || attr(node, 'property'))) {
       add(attr(node, 'content') || '', 'metadata', 'content', attr(node, 'name') || attr(node, 'property'));
@@ -104,7 +104,7 @@ export function renderPage(html, page, site, values = {}, { editing = false, ass
         const wrapper = element('studio-text', [
           { name: 'data-studio-field', value: field.id },
           { name: 'tabindex', value: '0' },
-          { name: 'aria-label', value: `編集: ${field.label}` }
+          { name: 'aria-label', value: `Edit: ${field.label}` }
         ], [node]);
         wrapper.parentNode = parent;
         parent.childNodes[index] = wrapper;

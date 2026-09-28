@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en-NZ">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,46 +9,46 @@
 </head>
 <body>
   <header class="app-header">
-    <a class="brand" href="/" aria-label="Page Studio ホーム"><span class="brand-mark">p<span>•</span></span><span>page<span class="brand-light">studio</span></span><span class="prototype">LOCAL</span></a>
-    <div class="header-actions"><span id="save-status" role="status">読み込み中…</span><button id="undo" class="icon-button" aria-label="元に戻す" title="元に戻す" disabled>↶</button><button id="redo" class="icon-button" aria-label="やり直す" title="やり直す" disabled>↷</button><span class="divider"></span><button id="save" class="button secondary">下書き保存</button><button id="publish" class="button primary">公開準備 <span>↗</span></button></div>
+    <a class="brand" href="/" aria-label="Page Studio home"><span class="brand-mark">p<span>•</span></span><span>page<span class="brand-light">studio</span></span><span class="prototype">LOCAL</span></a>
+    <div class="header-actions"><span id="save-status" role="status">Loading…</span><button id="undo" class="icon-button" aria-label="Undo" title="Undo" disabled>↶</button><button id="redo" class="icon-button" aria-label="Redo" title="Redo" disabled>↷</button><span class="divider"></span><button id="save" class="button secondary">Save draft</button><button id="publish" class="button primary">Prepare release <span>↗</span></button></div>
   </header>
   <main class="workspace">
     <aside class="sidebar">
       <label class="overline" for="site-select">WORKSPACE</label>
-      <select id="site-select" aria-label="編集するサイト"></select>
+      <select id="site-select" aria-label="Site to edit"></select>
       <p id="domain" class="muted domain"></p>
       <div class="sidebar-title"><span class="overline">PAGES</span><span id="page-count" class="count">3</span></div>
-      <nav id="pages" aria-label="ページ一覧"></nav>
+      <nav id="pages" aria-label="Pages"></nav>
       <div class="sidebar-rule"></div>
-      <button id="history-button" class="sidebar-action"><span>◷</span> 書き出し履歴 <span id="history-count" class="count">0</span></button>
-      <div class="sidebar-bottom"><span class="local-dot"></span><strong>ローカル試作</strong><p>下書きはこのPCに保存。<br>本番サイトには影響しません。</p><span class="connection">Netlify · 未接続</span></div>
+      <button id="history-button" class="sidebar-action"><span>◷</span> Export history <span id="history-count" class="count">0</span></button>
+      <div class="sidebar-bottom"><span class="local-dot"></span><strong>Local prototype</strong><p>Drafts are stored on this computer.<br>The live website is not affected.</p><span class="connection">Netlify · Not connected</span></div>
     </aside>
-    <section class="canvas-panel" aria-label="ビジュアル編集">
-      <div class="canvas-toolbar"><div class="breadcrumb"><span id="site-owner">Karen Dugdale</span><span>/</span><strong id="current-page">Home</strong></div><div class="view-controls"><button id="inspector-toggle" class="text-button" aria-expanded="false">文章一覧</button><button id="desktop" class="view-button active" aria-label="デスクトップ表示" title="デスクトップ表示">▱</button><button id="mobile" class="view-button" aria-label="スマートフォン表示" title="スマートフォン表示">▯</button><span class="divider"></span><button id="preview-toggle" class="text-button" aria-pressed="false">プレビュー</button></div></div>
-      <div class="canvas-tip"><span class="tip-symbol">✦</span><span id="tip">変えたい文字をクリック。その場で編集できます。</span><span class="tip-shortcut">Esc で編集終了</span></div>
-      <div class="canvas-stage"><div class="browser-shell" id="browser-shell"><div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><span id="preview-address">midlife-miracles.com</span><span class="draft-tag">DRAFT</span></div><iframe id="site-frame" title="Webサイトの編集プレビュー" sandbox="allow-same-origin allow-scripts"></iframe></div></div>
-      <div class="canvas-footer"><span><span class="local-dot"></span> <span id="field-count">—</span> 個の編集項目</span><span id="viewport-label">Desktop · 1200px / 縮小表示</span><span>テンプレートのデザインを維持</span></div>
+    <section class="canvas-panel" aria-label="Visual editor">
+      <div class="canvas-toolbar"><div class="breadcrumb"><span id="site-owner">Karen Dugdale</span><span>/</span><strong id="current-page">Home</strong></div><div class="view-controls"><button id="inspector-toggle" class="text-button" aria-expanded="false">Content list</button><button id="desktop" class="view-button active" aria-label="Desktop view" title="Desktop view">▱</button><button id="mobile" class="view-button" aria-label="Mobile view" title="Mobile view">▯</button><span class="divider"></span><button id="preview-toggle" class="text-button" aria-pressed="false">Preview</button></div></div>
+      <div class="canvas-tip"><span class="tip-symbol">✦</span><span id="tip">Click any text to edit it in place.</span><span class="tip-shortcut">Press Esc to finish editing</span></div>
+      <div class="canvas-stage"><div class="browser-shell" id="browser-shell"><div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><span id="preview-address">midlife-miracles.com</span><span class="draft-tag">DRAFT</span></div><iframe id="site-frame" title="Website editing preview" sandbox="allow-same-origin allow-scripts"></iframe></div></div>
+      <div class="canvas-footer"><span><span class="local-dot"></span> <span id="field-count">—</span> editable fields</span><span id="viewport-label">Desktop · 1200px / scaled view</span><span>Template design preserved</span></div>
     </section>
     <aside class="inspector">
-      <div class="inspector-tabs"><button class="active" id="tab-edit">編集</button><button id="tab-changes">変更 <span id="change-count">0</span></button></div>
+      <div class="inspector-tabs"><button class="active" id="tab-edit">Edit</button><button id="tab-changes">Changes <span id="change-count">0</span></button></div>
       <div id="edit-panel">
         <div id="selected-editor" class="selected-editor">
-          <div class="section-eyebrow">SELECTED CONTENT <span id="scope" class="pill">ページ</span></div>
-          <h2 id="field-section">文字を選択</h2>
-          <label for="field-value" id="field-label">プレビューの文章をクリックしてください</label>
-          <textarea id="field-value" rows="5" placeholder="ここでも文章を編集できます" disabled></textarea>
-          <div class="field-meta"><span id="character-count">0 文字</span><button id="reset-field" class="text-button" disabled>元の文章に戻す</button></div>
-          <p id="shared-note" class="shared-note" hidden>この項目は全ページ共通です。</p>
-          <details id="original-details"><summary>元の文章を見る</summary><p id="original-text"></p></details>
+          <div class="section-eyebrow">SELECTED CONTENT <span id="scope" class="pill">PAGE</span></div>
+          <h2 id="field-section">Select content</h2>
+          <label for="field-value" id="field-label">Click copy in the preview</label>
+          <textarea id="field-value" rows="5" placeholder="You can also edit the copy here" disabled></textarea>
+          <div class="field-meta"><span id="character-count">0 characters</span><button id="reset-field" class="text-button" disabled>Restore original</button></div>
+          <p id="shared-note" class="shared-note" hidden>This content is shared across pages.</p>
+          <details id="original-details"><summary>Show original copy</summary><p id="original-text"></p></details>
         </div>
-        <div class="field-browser"><div class="section-eyebrow">PAGE CONTENT</div><input type="search" id="field-search" placeholder="文章を検索…" aria-label="編集項目を検索"><div id="fields"></div></div>
+        <div class="field-browser"><div class="section-eyebrow">PAGE CONTENT</div><input type="search" id="field-search" placeholder="Search content…" aria-label="Search editable content"><div id="fields"></div></div>
       </div>
-      <div id="changes-panel" hidden><div class="changes-intro"><h2>変更した文章</h2><p>元のテンプレートとの差分です。<br>共有項目は他のページにも反映されます。</p></div><div id="changes"></div></div>
+      <div id="changes-panel" hidden><div class="changes-intro"><h2>Changed copy</h2><p>Differences from the source template.<br>Shared fields are applied to other pages.</p></div><div id="changes"></div></div>
     </aside>
   </main>
   <div id="toast" class="toast" role="status" hidden></div>
-  <dialog id="release-dialog"><div class="dialog-heading"><div><span class="overline">REVIEW & EXPORT</span><h2>公開前に、ひと呼吸。</h2></div><button id="close-release" class="icon-button" aria-label="閉じる">×</button></div><p>保存した下書きから、3ページと画像・スタイルを含む公開用ZIPを作成します。</p><div class="release-summary"><span id="release-changes">0 件の変更</span><span id="release-pages">3 ページ</span><span>下書きから生成</span></div><div class="notice"><strong>Netlifyはまだ接続されていません</strong><p>この操作は公開用ファイルの作成です。本番サイトへのデプロイは行いません。ZIPは確認用の別サイトに手動デプロイできます。</p></div><div id="release-result" hidden></div><div class="dialog-actions"><button id="create-release" class="button primary">公開用ZIPを作成 <span>↓</span></button></div></dialog>
-  <dialog id="history-dialog"><div class="dialog-heading"><div><span class="overline">SNAPSHOTS</span><h2>書き出し履歴</h2></div><button id="close-history" class="icon-button" aria-label="閉じる">×</button></div><p>過去の書き出しをダウンロード・確認できます。</p><div id="history-list"></div></dialog>
-  <div id="fatal" class="fatal" hidden><h1>編集画面を開けませんでした</h1><p id="fatal-message"></p><button class="button primary" id="reload">再読み込み</button></div>
+  <dialog id="release-dialog"><div class="dialog-heading"><div><span class="overline">REVIEW & EXPORT</span><h2>Review before you export.</h2></div><button id="close-release" class="icon-button" aria-label="Close">×</button></div><p>Create a release ZIP from the saved draft, including three pages, images, and styles.</p><div class="release-summary"><span id="release-changes">0 changes</span><span id="release-pages">3 pages</span><span>Generated from draft</span></div><div class="notice"><strong>Netlify is not connected yet</strong><p>This action creates release files; it does not deploy to the live website. The ZIP can be manually deployed to a separate review site.</p></div><div id="release-result" hidden></div><div class="dialog-actions"><button id="create-release" class="button primary">Create release ZIP <span>↓</span></button></div></dialog>
+  <dialog id="history-dialog"><div class="dialog-heading"><div><span class="overline">SNAPSHOTS</span><h2>Export history</h2></div><button id="close-history" class="icon-button" aria-label="Close">×</button></div><p>Download or review previous exports.</p><div id="history-list"></div></dialog>
+  <div id="fatal" class="fatal" hidden><h1>Page Studio could not be opened</h1><p id="fatal-message"></p><button class="button primary" id="reload">Reload</button></div>
 </body>
 </html>

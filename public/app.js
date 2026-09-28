@@ -22,7 +22,7 @@ const node = (tag, className, text) => {
   if (text !== undefined) element.textContent = text;
   return element;
 };
-const formatDate = value => new Date(value).toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const formatDate = value => new Date(value).toLocaleString('en-NZ', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 function toast(message, error = false) {
   clearTimeout(toastTimer);
   $('toast').textContent = message;
@@ -33,7 +33,7 @@ function toast(message, error = false) {
 async function api(url, options = {}) {
   const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers } });
   const result = await response.json();
-  if (!response.ok) throw new Error(result.error || '通信に失敗しました。');
+  if (!response.ok) throw new Error(result.error || 'The request failed.');
   return result;
 }
 const endpoint = suffix => `/api/sites/${site.id}/${suffix}`;
@@ -66,26 +66,26 @@ function renderFields() {
       section = field.section;
       $('fields').append(node('h3', 'field-group', section));
     }
-    const button = node('button', `field-item${field.id === selectedId ? ' active' : ''}${Object.hasOwn(values, field.id) ? ' changed' : ''}`, (field.type === 'text' ? value.trim() || '（空の文章）' : field.label).slice(0, 100));
+    const button = node('button', `field-item${field.id === selectedId ? ' active' : ''}${Object.hasOwn(values, field.id) ? ' changed' : ''}`, (field.type === 'text' ? value.trim() || '(Empty text)' : field.label).slice(0, 100));
     button.dataset.fieldId = field.id;
     button.addEventListener('click', () => selectField(field.id, true));
     $('fields').append(button);
     count++;
   }
-  if (!count) $('fields').append(node('p', 'empty', '該当する文章がありません。'));
+  if (!count) $('fields').append(node('p', 'empty', 'No matching content.'));
 }
 function selectField(id, scroll = false) {
   const field = fields.get(id);
   if (!field) return;
   selectedId = id;
   $('field-section').textContent = field.section;
-  $('field-label').textContent = field.type === 'text' ? 'テキスト' : field.label;
+  $('field-label').textContent = field.type === 'text' ? 'Text' : field.label;
   $('field-value').disabled = false;
   $('field-value').value = valueOf(id);
-  $('character-count').textContent = `${Array.from(valueOf(id)).length} 文字`;
-  $('scope').textContent = field.scope === 'shared' ? '共通' : 'ページ';
+  $('character-count').textContent = `${Array.from(valueOf(id)).length} characters`;
+  $('scope').textContent = field.scope === 'shared' ? 'SHARED' : 'PAGE';
   $('shared-note').hidden = field.scope !== 'shared';
-  $('shared-note').textContent = `同じ文言の共通項目に反映されます（${field.pages.length} ページ）。`;
+  $('shared-note').textContent = `This shared content is applied across ${field.pages.length} pages.`;
   $('original-text').textContent = field.original;
   $('reset-field').disabled = !Object.hasOwn(values, id);
   $('fields').querySelectorAll('[data-field-id]').forEach(item => item.classList.toggle('active', item.dataset.fieldId === id));
@@ -98,7 +98,7 @@ function renderChanges() {
     const card = node('div', 'change-card');
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
-    card.append(node('small', '', `${field.scope === 'shared' ? '共通' : site.pages.find(item => item.id === field.pageId).label} / ${field.section}`), node('p', 'before', field.original), node('p', 'after', value || '（空の文章）'));
+    card.append(node('small', '', `${field.scope === 'shared' ? 'Shared' : site.pages.find(item => item.id === field.pageId).label} / ${field.section}`), node('p', 'before', field.original), node('p', 'after', value || '(Empty text)'));
     const activate = () => {
       if (!field.pages.includes(page.id)) changePage(site.pages.find(item => item.id === field.pageId), id);
       else selectField(id, true);
@@ -108,7 +108,7 @@ function renderChanges() {
     card.addEventListener('keydown', event => { if (event.key === 'Enter') activate(); });
     $('changes').append(card);
   }
-  if (!Object.keys(values).length) $('changes').append(node('p', 'empty', '変更はまだありません。\nページ上の文章をクリックしてみましょう。'));
+  if (!Object.keys(values).length) $('changes').append(node('p', 'empty', 'No changes yet.\nClick some copy on the page to get started.'));
 }
 function updateUI() {
   $('change-count').textContent = Object.keys(values).length;
@@ -116,14 +116,14 @@ function updateUI() {
   $('redo').disabled = !redoStack.length;
   $('history-count').textContent = model.releases.length;
   if (selectedId) {
-    $('character-count').textContent = `${Array.from(valueOf(selectedId)).length} 文字`;
+    $('character-count').textContent = `${Array.from(valueOf(selectedId)).length} characters`;
     $('reset-field').disabled = !Object.hasOwn(values, selectedId);
   }
   renderPages();
   renderChanges();
 }
 function setValue(id, value, track = true) {
-  if (!fields.has(id) || value.length > 12000) { toast('1項目は12,000文字以内にしてください。', true); syncFrame(); return; }
+  if (!fields.has(id) || value.length > 12000) { toast('Each field must contain no more than 12,000 characters.', true); syncFrame(); return; }
   const before = valueOf(id);
   if (value === before) return;
   if (track) {
@@ -135,7 +135,7 @@ function setValue(id, value, track = true) {
   if (value === fields.get(id).original) delete values[id];
   else values[id] = value;
   if (selectedId === id && document.activeElement !== $('field-value')) $('field-value').value = value;
-  $('save-status').textContent = '保存待ち…';
+  $('save-status').textContent = 'Waiting to save…';
   $('save-status').classList.remove('error');
   document.body.classList.remove('save-error');
   updateUI();
@@ -149,18 +149,18 @@ async function saveDraft() {
   if (saveFlight) { await saveFlight; if (isDirty()) return saveDraft(); return; }
   if (!isDirty()) return;
   const snapshot = { ...values };
-  $('save-status').textContent = '保存中…';
+  $('save-status').textContent = 'Saving…';
   saveFlight = api(endpoint('draft'), { method: 'PUT', body: JSON.stringify({ revision, template: model.draft.template, values: snapshot }) })
     .then(draft => {
       revision = draft.revision;
       saved = { ...snapshot };
       model.draft = draft;
-      $('save-status').textContent = isDirty() ? '保存待ち…' : '✓ このPCに保存済み';
+      $('save-status').textContent = isDirty() ? 'Waiting to save…' : '✓ Saved on this computer';
       $('save-status').classList.remove('error');
       document.body.classList.remove('save-error');
     })
     .catch(error => {
-      $('save-status').textContent = '保存できませんでした';
+      $('save-status').textContent = 'Could not save';
       $('save-status').classList.add('error');
       document.body.classList.add('save-error');
       toast(error.message, true);
@@ -202,9 +202,9 @@ function showTab(tab) {
 function previewMode() {
   preview = !preview;
   document.body.classList.toggle('preview-mode', preview);
-  $('preview-toggle').textContent = preview ? '編集に戻る' : 'プレビュー';
+  $('preview-toggle').textContent = preview ? 'Back to editing' : 'Preview';
   $('preview-toggle').setAttribute('aria-pressed', String(preview));
-  $('tip').textContent = preview ? '表示確認モード · ページ内の編集枠を非表示にしています。' : '変えたい文字をクリック。その場で編集できます。';
+  $('tip').textContent = preview ? 'Preview mode · Editing outlines are hidden.' : 'Click any text to edit it in place.';
   send('preview', { enabled: preview });
 }
 function link(label, href, download = false) {
@@ -215,40 +215,40 @@ function link(label, href, download = false) {
 }
 function releaseLinks(release) {
   const links = node('div', 'history-links');
-  links.append(link('ZIPをダウンロード', endpoint(`download/${release.id}`), true));
+  links.append(link('Download ZIP', endpoint(`download/${release.id}`), true));
   for (const item of site.pages) links.append(link(item.label, `/review/${site.id}/${release.id}/${item.id}`));
   return links;
 }
 async function openPublish() {
   try { await saveDraft(); } catch { return; }
-  $('release-changes').textContent = `${Object.keys(values).length} 件の変更`;
-  $('release-pages').textContent = `${site.pages.length} ページ`;
+  $('release-changes').textContent = `${Object.keys(values).length} changes`;
+  $('release-pages').textContent = `${site.pages.length} pages`;
   $('release-result').hidden = true;
   $('create-release').disabled = false;
-  $('create-release').textContent = '公開用ZIPを作成 ↓';
+  $('create-release').textContent = 'Create release ZIP ↓';
   $('release-dialog').showModal();
 }
 async function createRelease() {
   $('create-release').disabled = true;
-  $('create-release').textContent = '作成中…';
+  $('create-release').textContent = 'Creating…';
   try {
     await saveDraft();
     const release = await api(endpoint('release'), { method: 'POST', body: JSON.stringify({ revision, template: model.draft.template }) });
     model.releases.unshift(release);
-    $('release-result').replaceChildren(node('strong', '', '公開用ファイルを作成しました。'), node('p', '', '本番サイトへの反映はまだ行っていません。'), releaseLinks(release));
+    $('release-result').replaceChildren(node('strong', '', 'Release files created.'), node('p', '', 'The live website has not been updated.'), releaseLinks(release));
     $('release-result').hidden = false;
-    $('create-release').textContent = '作成済み ✓';
+    $('create-release').textContent = 'Created ✓';
     updateUI();
-  } catch (error) { toast(error.message, true); $('create-release').disabled = false; $('create-release').textContent = '再試行'; }
+  } catch (error) { toast(error.message, true); $('create-release').disabled = false; $('create-release').textContent = 'Try again'; }
 }
 function openHistory() {
   $('history-list').replaceChildren();
   for (const release of model.releases) {
     const item = node('div', 'history-item');
-    item.append(node('strong', '', formatDate(release.createdAt)), node('small', '', `下書き v${release.revision} · ${release.changedCount} 件の変更 · 本番未公開`), releaseLinks(release));
+    item.append(node('strong', '', formatDate(release.createdAt)), node('small', '', `Draft v${release.revision} · ${release.changedCount} changes · Not published`), releaseLinks(release));
     $('history-list').append(item);
   }
-  if (!model.releases.length) $('history-list').append(node('p', 'empty', 'まだ書き出しはありません。「公開準備」から作成できます。'));
+  if (!model.releases.length) $('history-list').append(node('p', 'empty', 'No exports yet. Create one from Prepare release.'));
   $('history-dialog').showModal();
 }
 async function loadSite(id) {
@@ -260,7 +260,7 @@ async function loadSite(id) {
   $('domain').textContent = site.domain;
   $('site-owner').textContent = site.owner;
   $('page-count').textContent = site.pages.length;
-  $('save-status').textContent = '✓ このPCに保存済み';
+  $('save-status').textContent = '✓ Saved on this computer';
   $('save-status').classList.remove('error');
   changePage(site.pages[0]); updateUI();
 }
@@ -278,13 +278,13 @@ window.addEventListener('message', event => {
   if (message.type === 'navigate') {
     const target = site.pages.find(item => item.url === message.url?.split('#')[0]);
     if (target && target.id !== page.id) changePage(target);
-    else if (!target) toast('試作ではHome・About Karen・Shopを確認できます。');
+    else if (!target) toast('This prototype includes Home, About Karen, and Shop.');
   }
 });
 $('field-value').addEventListener('input', event => { if (selectedId) { setValue(selectedId, event.target.value); syncFrame(); } });
 $('field-search').addEventListener('input', renderFields);
 $('reset-field').addEventListener('click', () => { if (selectedId) { setValue(selectedId, fields.get(selectedId).original); syncFrame(); } });
-$('save').addEventListener('click', async () => { try { await saveDraft(); toast('このPCに下書きを保存しました。'); } catch {} });
+$('save').addEventListener('click', async () => { try { await saveDraft(); toast('Draft saved on this computer.'); } catch {} });
 $('undo').addEventListener('click', undo);
 $('redo').addEventListener('click', redo);
 $('publish').addEventListener('click', openPublish);
@@ -298,14 +298,14 @@ $('preview-toggle').addEventListener('click', previewMode);
 $('inspector-toggle').addEventListener('click', () => {
   const open = document.body.classList.toggle('inspector-open');
   $('inspector-toggle').setAttribute('aria-expanded', String(open));
-  $('inspector-toggle').textContent = open ? '一覧を閉じる' : '文章一覧';
+  $('inspector-toggle').textContent = open ? 'Close content list' : 'Content list';
 });
 for (const mode of ['desktop', 'mobile']) $(mode).addEventListener('click', () => {
   viewport = mode;
   $('browser-shell').classList.toggle('mobile', mode === 'mobile');
   $('desktop').classList.toggle('active', mode === 'desktop');
   $('mobile').classList.toggle('active', mode === 'mobile');
-  $('viewport-label').textContent = mode === 'mobile' ? 'Mobile · 390px 以下' : 'Desktop · 1200px / 縮小表示';
+  $('viewport-label').textContent = mode === 'mobile' ? 'Mobile · 390px or less' : 'Desktop · 1200px / scaled view';
   fitFrame();
 });
 $('site-select').addEventListener('change', async event => {

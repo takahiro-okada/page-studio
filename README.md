@@ -1,79 +1,79 @@
 # Page Studio — local prototype
 
-Karen / Midlife Miracles の Home、About Karen、Shop を使ったビジュアル文章編集アプリです。
-元のHTMLは変更せず、ブラウザ上で文章をクリックして書き換えます。
+Page Studio is a visual content editor built around the Home, About Karen, and Shop pages of Karen's Midlife Miracles website.
+It leaves the source HTML untouched while allowing editors to click and update copy directly in the browser.
 
-このリポジトリでいう「パイロット完了」は、ローカル環境で文章の編集・保存・差分確認・レスポンシブプレビュー・公開用ZIP作成まで検証できる状態を指します。チーム認証やNetlify本番公開まで完了した意味ではありません。
+In this repository, "pilot complete" means that editing, saving, reviewing changes, responsive previewing, and generating a release ZIP have been verified locally. It does not mean that team authentication or production deployment through Netlify is complete.
 
-- 正午までの完了条件と検証順序: [`docs/DELIVERY_PLAN.md`](docs/DELIVERY_PLAN.md)
-- Figma、Google Docs、GitHub、Netlifyを含む制作フロー: [`docs/WEB_PRODUCTION_WORKFLOW.md`](docs/WEB_PRODUCTION_WORKFLOW.md)
+- Pilot acceptance criteria and verification order: [`docs/DELIVERY_PLAN.md`](docs/DELIVERY_PLAN.md)
+- Production workflow covering Figma, Google Docs, GitHub, and Netlify: [`docs/WEB_PRODUCTION_WORKFLOW.md`](docs/WEB_PRODUCTION_WORKFLOW.md)
 
-## 起動
+## Run locally
 
-Node.js 22以上で、このフォルダー内から実行します。
+Use Node.js 22 or later and run the following commands from this directory:
 
 ```sh
 npm install
 npm start
 ```
 
-ブラウザで `http://127.0.0.1:4317` を開いてください。
+Open `http://127.0.0.1:4317` in your browser.
 
-## 使い方
+## How to use it
 
-1. 左側でページを選びます。
-2. サイト上の文章をクリックして直接入力します。右側の入力欄でも編集できます。
-3. 下書きは自動保存されます。「下書き保存」または Cmd/Ctrl+S でも保存できます。
-4. 「変更」で元の文章との差分を確認します。上部の矢印で元に戻す・やり直しができます。
-5. 「プレビュー」で編集枠を消し、スマートフォン表示でも確認できます。
-6. 「公開準備」から公開用ZIPを作成します。ZIPには3ページ、CSS、画像、元のサイトのJSが含まれます。履歴から当時の内容を確認できます。
+1. Select a page from the left sidebar.
+2. Click copy on the website preview and edit it in place. You can also use the input field in the right sidebar.
+3. Drafts save automatically. You can also use **Save draft** or Cmd/Ctrl+S.
+4. Open **Changes** to compare edited copy with the original. Use the arrows in the header to undo or redo changes.
+5. Open **Preview** to hide editing outlines and check the mobile layout.
+6. Select **Prepare release** to create a release ZIP. The ZIP includes three pages, CSS, images, and the source site's JavaScript. Previous exports remain available in the history panel.
 
-狭いウィンドウでは「文章一覧」を押すと入力欄が開きます。
-文章、ボタン、共通のナビゲーション・フッターに加え、ページタイトル、検索用説明、画像の代替テキストも一覧から編集できます。
-画像自体の差し替え、レイアウト編集、画像内の文字編集にはまだ対応していません。
+On narrow screens, select **Content list** to open the editing panel.
+Editors can update body copy, buttons, shared navigation and footer content, page titles, search descriptions, and image alternative text.
+Image replacement, layout editing, and text embedded inside images are not yet supported.
 
-## 保存と共有
+## Storage and sharing
 
-- 下書き・ZIP・履歴は `page-studio/.data/` に保存されます（Git対象外）。
-- 保存済みの下書きは再読み込み・サーバー再起動後も残ります。
-- 二重タブから古い版を保存すると競合を表示し、後から上書きしません。
-- 元のHTMLが変更された場合は、下書きとの照合が必要になるため保存を停止します。
-- ヘッダー・フッター内で同じ文字列の項目は同じ編集項目として扱います。別の意味を持つ同じ文言を分離する場合は、明示的な共有キーへの移行が必要です。
-- 対応する文字列はサーバーでHTMLエスケープされ、入力されたタグは実行されません。
+- Drafts, ZIP files, and export history are stored in `page-studio/.data/`, which is excluded from Git.
+- Saved drafts survive page reloads and server restarts.
+- Saving an older version from another tab shows a conflict instead of silently overwriting newer work.
+- Saving pauses when the source HTML changes, because the draft must be reconciled with the new template.
+- Matching copy in the header and footer is treated as one shared field. Separating identical text with different meanings will require explicit shared content keys.
+- Edited strings are HTML-escaped on the server, so submitted markup is not executed.
 
-## 現在の範囲
+## Current scope
 
-**ローカル専用の試作です。チーム用ログインとNetlify自動公開は未接続です。**
-サーバーはループバックアドレスにのみバインドします。インターネットにそのまま公開しないでください。
-「公開用ZIPを作成」は本番デプロイではありません。
+**This is a local-only prototype. Team authentication and automated Netlify publishing are not connected.**
+The server binds only to the loopback address. Do not expose it directly to the internet.
+Creating a release ZIP is not a production deployment.
 
-書き出しは手元の3ページに限定されます。元から未実装の商品、購入処理、FAQ・Contactの独立ページなどを追加するものではありません。
-別の既存サイトにZIPを上書きデプロイすると対象外のページがなくなるため、確認には新規の検証用Netlifyサイトを使ってください。
-写真・画像は元のローカル素材を使用しており、ライブサイトの最新版を自動同期していません。
-プレビューは元のスクリプトを実行せず、編集用ブリッジを使います。フォームは送信されません。
+Exports are limited to the three pages currently available locally. The prototype does not add unimplemented products, checkout behaviour, or separate FAQ and Contact pages.
+Do not overwrite an existing site with the ZIP: pages outside this prototype would be removed. Use a separate Netlify test project for review.
+Images come from the local source files and are not automatically synchronised with the latest live site.
+The preview does not execute the original website scripts. It uses the editing bridge, and forms are not submitted.
 
-## 他サイトへの再利用
+## Reusing Page Studio for another site
 
-`sites.mjs` にサイトを追加します。各サイトについて、ローカルのHTMLルート、元のURLパス、対象ページを設定します。
-下書き・履歴はサイトIDごとに分離されます。サイトを選ぶUIも共通です。
-この最初のアダプターは静的HTML向けで、テキストノードの位置から編集IDを生成します。
-React/Vue等で生成するページやテンプレートを頻繁に変える案件では、安定した明示的コンテンツIDとデータ層を導入してください。
-`images/`、`css/`、`js/` 以外の素材ディレクトリを使用するサイトは、静的素材ルートと書き出しルールの調整が必要です。
+Register additional sites in `sites.mjs`. Each entry defines the local HTML root, original URL prefix, and supported pages.
+Drafts and export history are isolated by site ID, and the shared interface includes a site selector.
+The initial adapter targets static HTML and generates editing IDs from text-node positions.
+For React, Vue, or projects with frequently changing templates, introduce stable explicit content IDs and a dedicated content layer.
+Sites that store assets outside `images/`, `css/`, and `js/` will require additional asset-root and export rules.
 
-## 運用版で追加するもの
+## Required for a production version
 
-- チームのログイン、サイトごとの閲覧・編集・公開権限
-- サーバー上の保存先とバックアップ
-- 安定したコンテンツID、テンプレート更新時の移行
-- 下書き・承認・公開の役割分担
-- Git連携またはNetlify APIを使った公開と完了確認、失敗時の表示
-- 画像の差し替え、複数人の編集競合への操作支援
+- Team login and per-site view, edit, and publish permissions
+- Server-side storage and backups
+- Stable content IDs and migrations when templates change
+- Separate draft, approval, and publishing responsibilities
+- Git integration or Netlify API publishing with completion and failure reporting
+- Image replacement and guidance for concurrent editing conflicts
 
-## 検証
+## Verification
 
 ```sh
 npm test
 ```
 
-HTML構造の維持、入力のエスケープ、共通文章の反映、保存・競合処理、ZIPの内容と固定スナップショットを検証します。
-サーバーの統合テストにはローカルポートの起動権限が必要です。
+The tests cover HTML structure preservation, input escaping, shared-copy propagation, draft storage and conflict handling, ZIP contents, and immutable release snapshots.
+The server integration test requires permission to open a local port.
